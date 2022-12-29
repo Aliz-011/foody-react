@@ -17,8 +17,13 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage';
 import { ToastContainer, toast } from 'react-toastify';
+import { getAllFoods, saveItems } from '../utils/firebaseFunctions';
+import { actionType } from '../context/reducer';
+import { useStateValue } from '../context/StateProvider';
 
 const CreateContainer = () => {
+  const [{ foods }, dispatch] = useStateValue();
+
   const [title, setTitle] = useState('');
   const [calories, setCalories] = useState('');
   const [price, setPrice] = useState('');
@@ -44,16 +49,7 @@ const CreateContainer = () => {
       (err) => {
         setFields(true);
         setMsg('Error while uploading, please try again🙇🏻‍♂️');
-        toast.error(err, {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
+        toast.error(err);
         setAlertStatus('danger');
         setTimeout(() => {
           setFields(false);
@@ -95,16 +91,7 @@ const CreateContainer = () => {
       setTimeout(() => {
         setFields(false);
       }, 5000);
-      toast.success('image deleted successfully', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      });
+      toast.success('image deleted successfully');
     });
   };
 
@@ -114,16 +101,7 @@ const CreateContainer = () => {
       if (!title || !calories || !imageAsset || !price || !category) {
         setFields(true);
         setMsg('please fill all the inputs!🙇🏻‍♂️');
-        toast.warning('please fill all the inputs!', {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
+        toast.warning('please fill all the inputs!');
         setAlertStatus('danger');
         setTimeout(() => {
           setFields(false);
@@ -139,26 +117,42 @@ const CreateContainer = () => {
           qty: 1,
           price,
         };
+        saveItems(data);
+        setIsLoading(false);
+        setFields(true);
+        setMsg('Data uploaded successfully');
+        toast.success('Data uploaded successfully');
+        clearData();
+        setAlertStatus('success');
+        setTimeout(() => {
+          setFields(false);
+        }, 5000);
       }
     } catch (error) {
       setFields(true);
       setMsg('Error while uploading, please try again🙇🏻‍♂️');
-      toast.error(error, {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      });
+      toast.error(error);
       setAlertStatus('danger');
       setTimeout(() => {
         setFields(false);
-        setIsLoading(false);
       }, 5000);
     }
+
+    fetchData();
+  };
+
+  const clearData = () => {
+    setTitle('');
+    setCategory('Select Category');
+    setPrice('');
+    setCalories('');
+    setImageAsset(null);
+  };
+
+  const fetchData = async () => {
+    await getAllFoods().then((data) =>
+      dispatch({ type: actionType.SET_FOODS, foods: data })
+    );
   };
 
   return (
@@ -207,7 +201,7 @@ const CreateContainer = () => {
             onChange={(e) => setCategory(e.target.value)}
             className="outline-none w-full text-base border-b-2 border-gray-200 p-2 rounded-md cursor-pointer"
           >
-            <option value="" className="bg-white">
+            <option value="Select Category" className="bg-white">
               Select Category
             </option>
             {categories &&

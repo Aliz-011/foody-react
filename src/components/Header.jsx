@@ -1,4 +1,4 @@
-import Logo from '../img/logo.png';
+import Logo from '../img/chef1.png';
 import Avatar from '../img/avatar.png';
 
 import { MdShoppingBasket, MdAdd, MdLogout } from 'react-icons/md';
@@ -90,8 +90,9 @@ const Header = () => {
               >
                 {user && user.email === 'aryatangkas56@gmail.com' && (
                   <Link to={'/createItem'}>
-                    <p className="flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-200 ease-in-out text-textColor text-base"
-                     onClick={() => setIsMenu(false)}
+                    <p
+                      className="flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-200 ease-in-out text-textColor text-base"
+                      onClick={() => setIsMenu(false)}
                     >
                       New item <MdAdd />
                     </p>
@@ -147,16 +148,28 @@ const Header = () => {
               )}
 
               <ul className="flex flex-col">
-                <li className="text-base text-textColor cursor-pointer hover:text-headingColor duration-200 transition-all ease-in-out py-2" onClick={() => setIsMenu(false)}>
+                <li
+                  className="text-base text-textColor cursor-pointer hover:text-headingColor duration-200 transition-all ease-in-out py-2"
+                  onClick={() => setIsMenu(false)}
+                >
                   Home
                 </li>
-                <li className="text-base text-textColor cursor-pointer hover:text-headingColor duration-200 transition-all ease-in-out py-2" onClick={() => setIsMenu(false)}>
+                <li
+                  className="text-base text-textColor cursor-pointer hover:text-headingColor duration-200 transition-all ease-in-out py-2"
+                  onClick={() => setIsMenu(false)}
+                >
                   Menu
                 </li>
-                <li className="text-base text-textColor cursor-pointer hover:text-headingColor duration-200 transition-all ease-in-out py-2" onClick={() => setIsMenu(false)}>
+                <li
+                  className="text-base text-textColor cursor-pointer hover:text-headingColor duration-200 transition-all ease-in-out py-2"
+                  onClick={() => setIsMenu(false)}
+                >
                   Contact
                 </li>
-                <li className="text-base text-textColor cursor-pointer hover:text-headingColor duration-200 transition-all ease-in-out py-2" onClick={() => setIsMenu(false)}>
+                <li
+                  className="text-base text-textColor cursor-pointer hover:text-headingColor duration-200 transition-all ease-in-out py-2"
+                  onClick={() => setIsMenu(false)}
+                >
                   Service
                 </li>
               </ul>

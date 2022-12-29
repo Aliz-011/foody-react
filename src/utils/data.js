@@ -5,16 +5,16 @@ import Fi1 from '../img/fi1.png';
 
 export const heroData = [
   { id: 1, name: 'es krim', desc: 'cokelat stroberi', price: 30000, img: I1 },
-  { id: 1, name: 'rasberry', desc: 'stroberi segar', price: 15000, img: F1 },
+  { id: 2, name: 'rasberry', desc: 'stroberi segar', price: 15000, img: F1 },
   {
-    id: 1,
+    id: 3,
     name: 'chicken kebab',
     desc: 'Mixed Kebab Plate',
     price: 35000,
     img: C3,
   },
   {
-    id: 1,
+    id: 4,
     name: 'fish kebab',
     desc: 'Mixed Fish Kebab',
     price: 30000,
@@ -50,7 +50,7 @@ export const categories = [
   },
   {
     id: 6,
-    name: 'Icecreams',
+    name: 'Ice Creams',
     urlParamName: 'icecreams',
   },
 
