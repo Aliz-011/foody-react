@@ -45,6 +45,7 @@ const CreateContainer = () => {
       (snapshot) => {
         const uploadProgess =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(uploadProgess);
       },
       (err) => {
         setFields(true);

@@ -12,7 +12,7 @@ import { useStateValue } from '../context/StateProvider';
 import { actionType } from '../context/reducer';
 
 const Header = () => {
-  const [{ user }, dispatch] = useStateValue();
+  const [{ user, cartShow, cartItems }, dispatch] = useStateValue();
 
   const [isMenu, setIsMenu] = useState(false);
 
@@ -36,13 +36,19 @@ const Header = () => {
     dispatch({ type: actionType.SET_USER, user: null });
   };
 
+  const showCart = () => {
+    dispatch({ type: actionType.SET_CART_SHOW, cartShow: !cartShow });
+  };
+
   return (
     <header className="fixed z-50 w-screen p-3 px-4 md:p-6 md:px-16 bg-primary">
       {/* desktop & tablet */}
       <div className="hidden w-full h-full md:flex justify-between">
         <Link to={'/'} className="flex items-center gap-2">
           <img src={Logo} alt="logo" className="object-cover w-8" />
-          <p className="text-xl font-bold text-headingColor">dinistore</p>
+          <p className="text-xl font-bold text-headingColor">
+            dini<span className="text-green-500">store</span>
+          </p>
         </Link>
 
         <div className="flex items-center gap-8">
@@ -66,11 +72,18 @@ const Header = () => {
             </li>
           </motion.ul>
 
-          <div className="relative flex items-center justify-center">
-            <MdShoppingBasket className="text-textColor text-2xl ml-8 cursor-pointer" />
-            <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center">
-              <p className="text-xs text-white font-semibold">2</p>
-            </div>
+          <div
+            className="relative flex items-center justify-center"
+            onClick={showCart}
+          >
+            <MdShoppingBasket className="text-textColor text-2xl  cursor-pointer" />
+            {cartItems && cartItems.length > 0 && (
+              <div className=" absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center">
+                <p className="text-xs text-white font-semibold">
+                  {cartItems.length}
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="relative">
@@ -112,11 +125,18 @@ const Header = () => {
 
       {/* mobile */}
       <div className="flex w-full h-full items-center justify-between md:hidden">
-        <div className="relative flex items-center justify-center">
-          <MdShoppingBasket className="text-textColor text-2xl cursor-pointer" />
-          <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center">
-            <p className="text-xs text-white font-semibold">2</p>
-          </div>
+        <div
+          className="relative flex items-center justify-center"
+          onClick={showCart}
+        >
+          <MdShoppingBasket className="text-textColor text-2xl  cursor-pointer" />
+          {cartItems && cartItems.length > 0 && (
+            <div className=" absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center">
+              <p className="text-xs text-white font-semibold">
+                {cartItems.length}
+              </p>
+            </div>
+          )}
         </div>
 
         <Link to={'/'} className="flex items-center gap-2">

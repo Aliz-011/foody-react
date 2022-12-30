@@ -4,12 +4,14 @@ import { motion } from 'framer-motion';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import Carousel from './Carousel';
 import { useStateValue } from '../context/StateProvider';
+import MenuContainer from './MenuContainer';
+import CartContainer from './CartContainer';
 
 const MainContainer = () => {
-  const [{ foods }, dispatch] = useStateValue();
+  const [{ foods, cartShow }, dispatch] = useStateValue();
 
   const [scrollValue, setScrollValue] = useState(0);
-  useEffect(() => {}, [scrollValue]);
+  useEffect(() => {}, [scrollValue, cartShow]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-auto">
@@ -45,6 +47,10 @@ const MainContainer = () => {
           data={foods?.filter((item) => item.category === 'icecreams')}
         />
       </section>
+
+      <MenuContainer />
+
+      {cartShow && <CartContainer />}
     </div>
   );
 };
