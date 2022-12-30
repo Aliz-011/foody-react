@@ -6,6 +6,9 @@ import { useStateValue } from '../context/StateProvider';
 import { actionType } from '../context/reducer';
 import EmptyCart from '../img/emptyCart.svg';
 import CartItem from './CartItem';
+import Base64 from 'base-64';
+import { toast, ToastContainer } from 'react-toastify';
+import { Router } from 'react-router-dom';
 
 const CartContainer = () => {
   const [{ cartShow, cartItems, user }, dispatch] = useStateValue();
@@ -24,8 +27,79 @@ const CartContainer = () => {
       return accumulator + item.qty * item.price;
     }, 0);
     setTot(totalPrice);
-    console.log(tot);
   }, [tot, flag]);
+
+  const createToken = async () => {
+    const res = await fetch('http://localhost:3080/api/payment', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: new Base64.encode(
+          'SB-Mid-server-YB3Miv4SkM_iDrrfq_TvQVyA' + ':'
+        ),
+      },
+      body: JSON.stringify({
+        transaction_details: {
+          order_id: 'dinistore-id-' + Math.round(new Date().getTime() / 1000),
+          gross_amount: tot + 15000,
+        },
+        item_details: {
+          id: Date.now() + Math.round(new Date().getTime() / 1000),
+          price: tot + 15000,
+          quantity: 1,
+          name: 'your oder',
+          merchant_name: 'Dini Abhsari',
+        },
+        customer_details: {
+          first_name: user.displayName,
+          email: user.email,
+        },
+        enabled_payments: [
+          'credit_card',
+          'cimb_clicks',
+          'bca_klikbca',
+          'bca_klikpay',
+          'bri_epay',
+          'echannel',
+          'permata_va',
+          'bca_va',
+          'bni_va',
+          'bri_va',
+          'other_va',
+          'gopay',
+          'indomaret',
+          'danamon_online',
+          'akulaku',
+          'shopeepay',
+          'kredivo',
+          'uob_ezpay',
+        ],
+      }),
+    });
+    return res.json();
+  };
+
+  const checkout = async () => {
+    const data = await createToken();
+    let tokenTransaction = data.token;
+    snap.pay(tokenTransaction, {
+      onSuccess: async function (result) {
+        toast.success(result.status_message);
+        localStorage.removeItem('cartItems');
+      },
+      onPending: function (result) {
+        toast.info(result.status_message);
+      },
+      onError: function (result) {
+        toast.error(result.status_message);
+      },
+      onClose: function () {
+        toast.warning('Ada yang ingin kamu tambahkan?');
+      },
+      gopayMode: 'qr',
+    });
+  };
 
   const clearCart = () => {
     dispatch({
@@ -43,6 +117,18 @@ const CartContainer = () => {
       exit={{ opacity: 0, x: 200 }}
       className="fixed top-0 right-0 w-full md:w-375 h-screen bg-white drop-shadow-md flex flex-col z-[100]"
     >
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="w-full flex items-center justify-between p-4 cursor-pointer">
         <motion.div whileTap={{ scale: 0.75 }} onClick={showCart}>
           <MdOutlineKeyboardBackspace className="text-textColor text-3xl" />
@@ -92,6 +178,7 @@ const CartContainer = () => {
 
             {user ? (
               <motion.button
+                onClick={checkout}
                 whileTap={{ scale: 0.8 }}
                 className="w-full p-2 rounded-full bg-gradient-to-tr from-blue-300 to-blue-600 text-gray-50 text-lg my-2 hover:shadow-lg"
               >
